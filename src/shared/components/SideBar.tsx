@@ -1,8 +1,9 @@
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { AppBar, Box, Collapse, Drawer, Icon, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React, { useState } from "react";
-import { useDrawerContext } from "../contexts";
+import { useAppThemeContext, useDrawerContext } from "../contexts";
 import MenuIcon from '@mui/icons-material/Menu';
+import { green } from "@mui/material/colors";
 
 interface ISideBar {
     children: React.ReactNode;
@@ -30,9 +31,9 @@ const ListItemLink: React.FC<IListNavButtons> = ({ icon, label, data }) => {
 
     return (
         <List component={'nav'} dense={true}>
-            <ListItemButton onClick={handleClick}>
+            <ListItemButton onClick={handleClick} key={label}>
                 <ListItemIcon sx={{ minWidth: 35 }}>
-                    <Icon>{icon}</Icon>
+                    <Icon sx={{color: green[700]}}>{icon}</Icon>
                 </ListItemIcon>
                 <ListItemText primary={label} />
                 {open ? <ExpandLess /> : <ExpandMore />}
@@ -40,9 +41,9 @@ const ListItemLink: React.FC<IListNavButtons> = ({ icon, label, data }) => {
             <Collapse in={open} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding dense={true}>
                     {open && data.map((item) => (
-                        <ListItemButton href={item.to} sx={{ pl: 4 }}>
+                        <ListItemButton href={item.to} sx={{ pl: 4 }} key={item.to}>
                             <ListItemIcon sx={{ minWidth: 35 }}>
-                                <Icon>{item.icon}</Icon>
+                                <Icon sx={{color: green[700]}}>{item.icon}</Icon>
                             </ListItemIcon>
                             <ListItemText primary={item.label} />
                         </ListItemButton>
@@ -61,6 +62,7 @@ export const SideBar: React.FC<ISideBar> = ({ children }) => {
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
     const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext();
+    const { toggleTheme } = useAppThemeContext();
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -86,6 +88,14 @@ export const SideBar: React.FC<ISideBar> = ({ children }) => {
                             <ListItemLink icon={drawerOption.icon} label={drawerOption.label} data={drawerOption.data} />
                         ))
                     }
+                </Box>
+                <Box>
+                    <ListItemButton dense={true} onClick={toggleTheme}>
+                        <ListItemIcon sx={{ minWidth: 35}} >
+                            <Icon sx={{color: green[700]}}>contrast</Icon>
+                        </ListItemIcon>
+                        <ListItemText primary="Dark/Light Theme" />
+                    </ListItemButton>
                 </Box>
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 1 }} >
