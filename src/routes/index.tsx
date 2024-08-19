@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useDrawerContext } from "../shared/contexts";
 import { useEffect } from "react";
+import { Home } from "../pages";
 
 export const AppRoutes = () => {
     
@@ -24,7 +25,7 @@ export const AppRoutes = () => {
 
     return (
         <Routes>
-            <Route path="/home" element={<>Home page</>} />
+            <Route path="/home" element={<Home />} />
             <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
     );
