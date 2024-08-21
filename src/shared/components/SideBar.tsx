@@ -1,7 +1,7 @@
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { AppBar, Box, Collapse, Drawer, Icon, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React, { useState } from "react";
-import { useAppThemeContext, useDrawerContext } from "../contexts";
+import { useDrawerContext } from "../contexts";
 import MenuIcon from '@mui/icons-material/Menu';
 import { green } from "@mui/material/colors";
 
@@ -62,7 +62,6 @@ export const SideBar: React.FC<ISideBar> = ({ children }) => {
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
     const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext();
-    const { toggleTheme } = useAppThemeContext();
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -88,14 +87,6 @@ export const SideBar: React.FC<ISideBar> = ({ children }) => {
                             <ListItemLink icon={drawerOption.icon} label={drawerOption.label} data={drawerOption.data} />
                         ))
                     }
-                </Box>
-                <Box>
-                    <ListItemButton dense={true} onClick={toggleTheme}>
-                        <ListItemIcon sx={{ minWidth: 35}} >
-                            <Icon sx={{color: green[700]}}>contrast</Icon>
-                        </ListItemIcon>
-                        <ListItemText primary="Dark/Light Theme" />
-                    </ListItemButton>
                 </Box>
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 1 }} >

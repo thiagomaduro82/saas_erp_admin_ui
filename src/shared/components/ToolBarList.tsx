@@ -75,7 +75,7 @@ export const ToolbarList: React.FC<IToolBarListProps> = ({ pageSizeList, fieldsL
             <TextField
                 size={'small'}
                 value={searchFor}
-                sx={{minWidth: 550}}
+                fullWidth
                 label="Look for"
             />
             <FormControl sx={{ minWidth: 120 }} size="small">
@@ -101,7 +101,6 @@ export const ToolbarList: React.FC<IToolBarListProps> = ({ pageSizeList, fieldsL
                     color="primary"
                     variant="contained"
                     startIcon={<Icon>search</Icon>}
-                    size="small"
                     onClick={onClickAddButton}
                 >
                     Search
