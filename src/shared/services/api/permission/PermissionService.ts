@@ -1,30 +1,30 @@
 import { Api } from "../axios-config"
 
-interface IPermissionList {
+export interface IPermissionList {
     name: string,
     description: string
 }
 
-interface IPermissionDetail {
+export interface IPermissionDetail {
     uuid: string, 
     name: string,
     description: string
 }
 
 type TPermissionTotalCount = {
-    data: IPermissionList[];
+    data: IPermissionDetail[];
     totalCount: number;
 }
 
 const getAll = async (page:number, size: number): Promise<TPermissionTotalCount | Error> => {
     try {
         const relativeUrl = `/v1/permission?pageNumber=${page}&pageSize=${size}`;
-        const { data, headers } = await Api.get(relativeUrl);
+        const { data } = await Api.get(relativeUrl);
         if (data) {
             return {
-                data,
-                totalCount: Number(headers['x-total-count'] || 1)
-            }
+                data: data["content"],
+                totalCount: data["totalElements"]
+            };
         }
         return new Error('');
     } catch (error) {
