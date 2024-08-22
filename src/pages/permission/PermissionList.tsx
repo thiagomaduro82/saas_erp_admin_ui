@@ -3,28 +3,33 @@ import { ToolbarList } from "../../shared/components";
 import { BaseLayout } from "../../shared/layouts";
 import { IPermissionDetail, PermissionService } from "../../shared/services/api/permission/PermissionService";
 import { Box, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
+import { useDebounce } from "../../shared/hooks";
 
 
 export const PermissionList: React.FC = () => {
 
+    const { debounce } = useDebounce(3000, false);
     const [rows, setRows] = useState<IPermissionDetail[]>([]);
     const [totalCount, settotalCount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        setIsLoading(true);
-        PermissionService.getAll(0, 20)
-            .then((result) => {
-                setIsLoading(false);
-                if (result instanceof Error) {
-                    alert(result.message);
-                } else {
-                    setRows(result.data);
-                    settotalCount(result.totalCount)
-                    console.log(result.data);
-                }
-            });
-    }, []);
+        debounce(() => {
+            setIsLoading(true);
+            PermissionService.getAll(0, 20)
+                .then((result) => {
+                    setIsLoading(false);
+                    if (result instanceof Error) {
+                        alert(result.message);
+                    } else {
+                        setRows(result.data);
+                        settotalCount(result.totalCount)
+                        console.log(result.data);
+                    }
+                });
+        });
+        
+    }, [debounce]);
 
     return (
         <BaseLayout title="Permissions list" toolsBar={(

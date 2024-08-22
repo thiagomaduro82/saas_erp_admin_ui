@@ -49,7 +49,7 @@ export const ToolbarList: React.FC<IToolBarListProps> = ({ pageSizeList, fieldsL
                 >
                     {pageSizeList && (
                         pageSizeList.map((item) => (
-                            <MenuItem value={item}>{item}</MenuItem>
+                            <MenuItem value={item} key={item}>{item}</MenuItem>
                         ))
 
                     )}
@@ -66,7 +66,7 @@ export const ToolbarList: React.FC<IToolBarListProps> = ({ pageSizeList, fieldsL
                 >
                     {fieldsList && (
                         fieldsList.map((item) => (
-                            <MenuItem value={item}>{item}</MenuItem>
+                            <MenuItem value={item} key={item}>{item}</MenuItem>
                         ))
 
                     )}
@@ -89,7 +89,7 @@ export const ToolbarList: React.FC<IToolBarListProps> = ({ pageSizeList, fieldsL
                 >
                     {fieldsList && (
                         fieldsList.map((item) => (
-                            <MenuItem value={item}>{item}</MenuItem>
+                            <MenuItem value={item} key={item}>{item}</MenuItem>
                         ))
 
                     )}
