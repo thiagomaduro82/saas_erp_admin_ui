@@ -23,7 +23,7 @@ const getAll = async (page:number, size: number): Promise<TPermissionTotalCount 
         if (data) {
             return {
                 data,
-                totalCount: Number(headers['x-total-count'])
+                totalCount: Number(headers['x-total-count'] || 1)
             }
         }
         return new Error('');
@@ -32,20 +32,48 @@ const getAll = async (page:number, size: number): Promise<TPermissionTotalCount 
     }
 }
 
-const getByUuid = async (): Promise<any> => {
-
+const getByUuid = async (uuid: string): Promise<IPermissionDetail | Error> => {
+    try {
+        const { data } = await Api.get(`/v1/permission/${uuid}`);
+        if (data) {
+            return data;
+        }
+        return new Error('');
+    } catch (error) {
+        return new Error('');
+    }
 }
 
-const create = async (): Promise<any> => {
-
+const create = async (permission: IPermissionList): Promise<IPermissionDetail | Error> => {
+    try {
+        const { data } = await Api.post('/v1/permission', permission);
+        if (data) {
+            return data;
+        }
+        return new Error('');
+    } catch (error) {
+        return new Error('');
+    }
 }
 
-const updateByUuid = async (): Promise<any> => {
-
+const updateByUuid = async (uuid: string, permission: IPermissionList): Promise<IPermissionDetail | Error> => {
+    try {
+        const { data } = await Api.put(`/v1/permission/${uuid}`, permission);
+        if (data) {
+            return data;
+        }
+        return new Error('');
+    } catch (error) {
+        return new Error('');
+    }
 }
 
-const deleteByUuid = async (): Promise<any> => {
-
+const deleteByUuid = async (uuid: string): Promise<void | Error> => {
+    try {
+        const { data } = await Api.delete(`/v1/permission/${uuid}`);
+    } catch (error) {
+        return new Error('');
+    }
 }
 
 export const PermissionService = {
