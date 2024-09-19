@@ -37,7 +37,7 @@ export const PermissionList: React.FC = () => {
         )}>
             <Box component={Paper} elevation={1} sx={{ m: 1, width: 'auto' }}>
                 <TableContainer>
-                    <Table>
+                    <Table size="small" aria-label="a dense table">
                         <TableHead>
                             <TableRow>
                                 <TableCell>UUID</TableCell>
