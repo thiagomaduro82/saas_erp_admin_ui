@@ -13,12 +13,12 @@ interface IToolBarListProps {
 export const ToolbarList: React.FC<IToolBarListProps> = ({ pageSizeList, fieldsList, orderList, searchFor, onChangeText, onClickAddButton }) => {
 
     const theme = useTheme();
-    const [pageSize, setPageSize] = useState('');
-    const [field, setField] = useState('');
-    const [order, setOrder] = useState('');
+    const [pageSize, setPageSize] = useState(pageSizeList[0]);
+    const [field, setField] = useState(fieldsList[0]);
+    const [order, setOrder] = useState(orderList[0]);
 
     const handleChangePageSize = (event: SelectChangeEvent) => {
-        setPageSize(event.target.value);
+        setPageSize(Number(event.target.value));
     }
     const handleChangeField = (event: SelectChangeEvent) => {
         setField(event.target.value);
@@ -43,7 +43,7 @@ export const ToolbarList: React.FC<IToolBarListProps> = ({ pageSizeList, fieldsL
                 <Select
                     labelId="label-select-page-size"
                     id="select-page-size"
-                    value={pageSize}
+                    value={pageSize.toString()}
                     label="Page size"
                     onChange={handleChangePageSize}
                 >
@@ -87,8 +87,8 @@ export const ToolbarList: React.FC<IToolBarListProps> = ({ pageSizeList, fieldsL
                     label="Order by"
                     onChange={handleChangeOrder}
                 >
-                    {fieldsList && (
-                        fieldsList.map((item) => (
+                    {orderList && (
+                        orderList.map((item) => (
                             <MenuItem value={item} key={item}>{item}</MenuItem>
                         ))
 

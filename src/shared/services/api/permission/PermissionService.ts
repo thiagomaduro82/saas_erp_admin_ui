@@ -14,6 +14,7 @@ export interface IPermissionDetail {
 type TPermissionTotalCount = {
     data: IPermissionDetail[];
     totalCount: number;
+    totalPages: number;
 }
 
 const getAll = async (page:number, size: number): Promise<TPermissionTotalCount | Error> => {
@@ -23,7 +24,8 @@ const getAll = async (page:number, size: number): Promise<TPermissionTotalCount 
         if (data) {
             return {
                 data: data["content"],
-                totalCount: data["totalElements"]
+                totalCount: data["totalElements"],
+                totalPages: data["totalPages"]
             };
         }
         return new Error('');
