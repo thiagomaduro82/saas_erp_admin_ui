@@ -1,18 +1,25 @@
 import { Box, Button, FormControl, Icon, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, TextField, useTheme } from "@mui/material";
 import { useState } from "react";
 
+export interface ISearchParams {
+    pageSize: number;
+    field?: string;
+    searchFor?: string;
+    order: string;
+}
+
 interface IToolBarListProps {
     pageSizeList: number[];
     fieldsList: string[];
     orderList: string[];
-    searchFor?: string;
-    onChangeText?: (newText: string) => void;
-    onClickAddButton?: () => void;
+    onClickSearchButton?: (searchParams: ISearchParams) => void;
 }
 
-export const ToolbarList: React.FC<IToolBarListProps> = ({ pageSizeList, fieldsList, orderList, searchFor, onChangeText, onClickAddButton }) => {
+export const ToolbarList: React.FC<IToolBarListProps> = ({ pageSizeList, fieldsList, orderList, onClickSearchButton }) => {
 
     const theme = useTheme();
+
+    const [searchFor, setSearchFor] = useState('');
     const [pageSize, setPageSize] = useState(pageSizeList[0]);
     const [field, setField] = useState(fieldsList[0]);
     const [order, setOrder] = useState(orderList[0]);
@@ -25,6 +32,9 @@ export const ToolbarList: React.FC<IToolBarListProps> = ({ pageSizeList, fieldsL
     }
     const handleChangeOrder = (event: SelectChangeEvent) => {
         setOrder(event.target.value);
+    }
+    const handleChangeSearchFor = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setSearchFor(event.target.value);
     }
 
     return (
@@ -75,6 +85,7 @@ export const ToolbarList: React.FC<IToolBarListProps> = ({ pageSizeList, fieldsL
             <TextField
                 size={'small'}
                 value={searchFor}
+                onChange={handleChangeSearchFor}
                 fullWidth
                 label="Look for"
             />
@@ -101,7 +112,7 @@ export const ToolbarList: React.FC<IToolBarListProps> = ({ pageSizeList, fieldsL
                     color="primary"
                     variant="contained"
                     startIcon={<Icon>search</Icon>}
-                    onClick={onClickAddButton}
+                    onClick={() => onClickSearchButton?.({pageSize, field, searchFor, order})}
                 >
                     Search
                 </Button>

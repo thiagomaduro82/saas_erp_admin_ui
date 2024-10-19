@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ToolbarList } from "../../shared/components";
+import { ISearchParams, ToolbarList } from "../../shared/components";
 import { BaseLayout } from "../../shared/layouts";
 import { IPermissionDetail, PermissionService } from "../../shared/services/api/permission/PermissionService";
 import { Box, Button, Icon, LinearProgress, Pagination, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
@@ -31,6 +31,7 @@ export const PermissionList: React.FC = () => {
 
     const { debounce } = useDebounce(0, false);
     const [rows, setRows] = useState<IPermissionDetail[]>([]);
+    const [searchParams, setSearchParams] = useState<ISearchParams>();
     const [totalCount, setTotalCount] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
@@ -56,7 +57,8 @@ export const PermissionList: React.FC = () => {
 
     return (
         <BaseLayout title="Permissions list" toolsBar={(
-            <ToolbarList pageSizeList={Environment.PAGE_SIZES} fieldsList={['UUID', 'Name', 'Description']} orderList={['Asc', 'Desc']} />
+            <ToolbarList pageSizeList={Environment.PAGE_SIZES} fieldsList={['UUID', 'Name', 'Description']} orderList={['Asc', 'Desc']} 
+            onClickSearchButton={newSearchParams => setSearchParams(newSearchParams)}/>
         )}>
             <Box component={Paper} elevation={1} sx={{ p: 1, m: 1, width: 'auto' }}>
                 <Button
