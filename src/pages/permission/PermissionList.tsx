@@ -40,11 +40,14 @@ export const PermissionList: React.FC = () => {
         debounce(() => {
             setIsLoading(true);
             let pageSize = searchParams?.pageSize;
+            let order = searchParams?.order.toLowerCase();
             if (pageSize === undefined) {
                 pageSize = 25;
             }
-            console.log('field: %s - arg: %s', searchParams?.field, searchParams?.searchFor);
-            PermissionService.getAll(0, pageSize, searchParams?.field, searchParams?.searchFor)
+            if (order === undefined) {
+                order = 'asc';
+            }
+            PermissionService.getAll(0, pageSize, searchParams?.field, searchParams?.searchFor, order)
                 .then((result) => {
                     setIsLoading(false);
                     if (result instanceof Error) {
