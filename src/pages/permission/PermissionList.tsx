@@ -11,23 +11,23 @@ export const PermissionList: React.FC = () => {
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
-          backgroundColor: theme.palette.secondary.dark,
-          color: theme.palette.common.white,
+            backgroundColor: theme.palette.secondary.dark,
+            color: theme.palette.common.white,
         },
         [`&.${tableCellClasses.body}`]: {
-          fontSize: 14,
+            fontSize: 14,
         },
-      }));
-      
-      const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    }));
+
+    const StyledTableRow = styled(TableRow)(({ theme }) => ({
         '&:nth-of-type(odd)': {
-          backgroundColor: theme.palette.action.hover,
+            backgroundColor: theme.palette.action.hover,
         },
         // hide last border
         '&:last-child td, &:last-child th': {
-          border: 0,
+            border: 0,
         },
-      }));
+    }));
 
     const { debounce } = useDebounce(0, false);
     const [rows, setRows] = useState<IPermissionDetail[]>([]);
@@ -35,6 +35,7 @@ export const PermissionList: React.FC = () => {
     const [totalCount, setTotalCount] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+    const [page, setPage] = useState(0);
 
     useEffect(() => {
         debounce(() => {
@@ -47,7 +48,7 @@ export const PermissionList: React.FC = () => {
             if (order === undefined) {
                 order = 'asc';
             }
-            PermissionService.getAll(0, pageSize, searchParams?.field, searchParams?.searchFor, order)
+            PermissionService.getAll(page, pageSize, searchParams?.field, searchParams?.searchFor, order)
                 .then((result) => {
                     setIsLoading(false);
                     if (result instanceof Error) {
@@ -61,12 +62,12 @@ export const PermissionList: React.FC = () => {
                 });
         });
 
-    }, [debounce, searchParams]);
+    }, [debounce, searchParams, page]);
 
     return (
         <BaseLayout title="Permissions list" toolsBar={(
-            <ToolbarList pageSizeList={Environment.PAGE_SIZES} fieldsList={['UUID', 'Name', 'Description']} orderList={['Asc', 'Desc']} 
-            onClickSearchButton={newSearchParams => setSearchParams(newSearchParams)}/>
+            <ToolbarList pageSizeList={Environment.PAGE_SIZES} fieldsList={['UUID', 'Name', 'Description']} orderList={['Asc', 'Desc']}
+                onClickSearchButton={newSearchParams => setSearchParams(newSearchParams)} />
         )}>
             <Box component={Paper} elevation={1} sx={{ p: 1, m: 1, width: 'auto' }}>
                 <Button
@@ -74,7 +75,7 @@ export const PermissionList: React.FC = () => {
                     variant="contained"
                     endIcon={<Icon>add</Icon>}
                     size="small"
-                    sx={{marginBottom: 2}}
+                    sx={{ marginBottom: 2 }}
                 >
                     New
                 </Button>
@@ -113,8 +114,9 @@ export const PermissionList: React.FC = () => {
                                 <TableRow>
                                     <TableCell colSpan={4}>
                                         <Pagination
+                                            page={page}
                                             count={totalPages}
-                                            onChange={(_, newPage) => newPage}
+                                            onChange={(_, newPage) => setPage(newPage - 1)}
                                         />
                                     </TableCell>
                                 </TableRow>

@@ -22,7 +22,9 @@ const getAll = async (page: number, size: number, field?: string, arg?: string, 
         let relativeUrl = `/v1/permission?pageNumber=${page}&pageSize=${size}`;
         if (arg !== undefined && arg !== '') {
             let fieldSearch = field?.toLowerCase();
-            relativeUrl = relativeUrl + `&${fieldSearch}=${arg}&sort=${fieldSearch},${order}`;
+            relativeUrl = relativeUrl + `&${fieldSearch}=${arg}&sort=${fieldSearch}&order=${order?.toLowerCase()}`;
+        } else {
+            relativeUrl = relativeUrl + `&sort=name&order=${order?.toLowerCase()}`;
         }
         console.log(relativeUrl);
         const { data } = await Api.get(relativeUrl);
