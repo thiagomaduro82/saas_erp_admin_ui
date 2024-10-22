@@ -39,7 +39,12 @@ export const PermissionList: React.FC = () => {
     useEffect(() => {
         debounce(() => {
             setIsLoading(true);
-            PermissionService.getAll(0, 20)
+            let pageSize = searchParams?.pageSize;
+            if (pageSize === undefined) {
+                pageSize = 25;
+            }
+            console.log('field: %s - arg: %s', searchParams?.field, searchParams?.searchFor);
+            PermissionService.getAll(0, pageSize, searchParams?.field, searchParams?.searchFor)
                 .then((result) => {
                     setIsLoading(false);
                     if (result instanceof Error) {
@@ -53,7 +58,7 @@ export const PermissionList: React.FC = () => {
                 });
         });
 
-    }, [debounce]);
+    }, [debounce, searchParams]);
 
     return (
         <BaseLayout title="Permissions list" toolsBar={(
