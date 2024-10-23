@@ -2,32 +2,16 @@ import { useEffect, useState } from "react";
 import { ISearchParams, ToolbarList } from "../../shared/components";
 import { BaseLayout } from "../../shared/layouts";
 import { IPermissionDetail, PermissionService } from "../../shared/services/api/permission/PermissionService";
-import { Box, Button, Icon, LinearProgress, Pagination, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
+import { Box, Button, Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
 import { useDebounce } from "../../shared/hooks";
 import { Environment } from "../../shared/environment";
+import { grey } from "@mui/material/colors";
+import DeleteIcon from '@mui/icons-material/Delete';
+import ArticleIcon from '@mui/icons-material/Article';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 
 
 export const PermissionList: React.FC = () => {
-
-    const StyledTableCell = styled(TableCell)(({ theme }) => ({
-        [`&.${tableCellClasses.head}`]: {
-            backgroundColor: theme.palette.secondary.dark,
-            color: theme.palette.common.white,
-        },
-        [`&.${tableCellClasses.body}`]: {
-            fontSize: 14,
-        },
-    }));
-
-    const StyledTableRow = styled(TableRow)(({ theme }) => ({
-        '&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.action.hover,
-        },
-        // hide last border
-        '&:last-child td, &:last-child th': {
-            border: 0,
-        },
-    }));
 
     const { debounce } = useDebounce(0, false);
     const [rows, setRows] = useState<IPermissionDetail[]>([]);
@@ -35,7 +19,7 @@ export const PermissionList: React.FC = () => {
     const [totalCount, setTotalCount] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(1);
 
     useEffect(() => {
         debounce(() => {
@@ -43,12 +27,12 @@ export const PermissionList: React.FC = () => {
             let pageSize = searchParams?.pageSize;
             let order = searchParams?.order.toLowerCase();
             if (pageSize === undefined) {
-                pageSize = 25;
+                pageSize = 15;
             }
             if (order === undefined) {
                 order = 'asc';
             }
-            PermissionService.getAll(page, pageSize, searchParams?.field, searchParams?.searchFor, order)
+            PermissionService.getAll((page - 1), pageSize, searchParams?.field, searchParams?.searchFor, order)
                 .then((result) => {
                     setIsLoading(false);
                     if (result instanceof Error) {
@@ -67,36 +51,49 @@ export const PermissionList: React.FC = () => {
     return (
         <BaseLayout title="Permissions list" toolsBar={(
             <ToolbarList pageSizeList={Environment.PAGE_SIZES} fieldsList={['UUID', 'Name', 'Description']} orderList={['Asc', 'Desc']}
-                onClickSearchButton={newSearchParams => setSearchParams(newSearchParams)} />
+                onClickSearchButton={newSearchParams => { setSearchParams(newSearchParams); setPage(1) }} />
         )}>
-            <Box component={Paper} elevation={1} sx={{ p: 1, m: 1, width: 'auto' }}>
+            <Box component={Paper} elevation={5} sx={{ p: 1, m: 1, width: 'auto' }}>
                 <Button
                     color="primary"
                     variant="contained"
-                    endIcon={<Icon>add</Icon>}
+                    startIcon={<Icon>add</Icon>}
                     size="small"
                     sx={{ marginBottom: 2 }}
+                    title="Add a new record"
                 >
                     New
                 </Button>
                 <TableContainer>
                     <Table size="small" aria-label="a dense table">
-                        <TableHead>
+                        <TableHead sx={{ backgroundColor: grey[900] }}>
                             <TableRow>
-                                <StyledTableCell>UUID</StyledTableCell>
-                                <StyledTableCell>Name</StyledTableCell>
-                                <StyledTableCell>Description</StyledTableCell>
-                                <StyledTableCell>Actions</StyledTableCell>
+                                <TableCell sx={{ color: grey[50] }}>UUID</TableCell>
+                                <TableCell sx={{ color: grey[50] }}>Name</TableCell>
+                                <TableCell sx={{ color: grey[50] }}>Description</TableCell>
+                                <TableCell sx={{ color: grey[50], width: "100px", textAlign: "center" }}>Actions</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {rows.map(row => (
-                                <StyledTableRow key={row.uuid}>
-                                    <StyledTableCell>{row.uuid}</StyledTableCell>
-                                    <StyledTableCell>{row.name}</StyledTableCell>
-                                    <StyledTableCell>{row.description}</StyledTableCell>
-                                    <StyledTableCell>Edit | Delete</StyledTableCell>
-                                </StyledTableRow>
+                                <TableRow key={row.uuid}>
+                                    <TableCell>{row.uuid}</TableCell>
+                                    <TableCell>{row.name}</TableCell>
+                                    <TableCell>{row.description}</TableCell>
+                                    <TableCell sx={{textAlign: "center"}}>
+                                        <IconButton size="small" color="secondary" sx={{marginRight: 1}} title="Show record">
+                                            <ArticleIcon fontSize="inherit" />
+                                        </IconButton>
+
+                                        <IconButton size="small" color="warning" sx={{marginRight: 1}} title="Edit record">
+                                            <EditNoteIcon fontSize="inherit" />
+                                        </IconButton>
+
+                                        <IconButton size="small" color="error" title="Delete record">
+                                            <DeleteIcon fontSize="inherit" />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
                             ))}
                         </TableBody>
                         {totalCount === 0 && !isLoading && (
@@ -116,7 +113,7 @@ export const PermissionList: React.FC = () => {
                                         <Pagination
                                             page={page}
                                             count={totalPages}
-                                            onChange={(_, newPage) => setPage(newPage - 1)}
+                                            onChange={(_, newPage) => setPage(newPage)}
                                         />
                                     </TableCell>
                                 </TableRow>

@@ -47,6 +47,7 @@ export const ToolbarList: React.FC<IToolBarListProps> = ({ pageSizeList, fieldsL
             display={'flex'}
             alignItems={'center'}
             gap={1}
+            elevation={5}
         >
             <FormControl sx={{ minWidth: 120 }} size="small">
                 <InputLabel id="label-select-page-size">Page size</InputLabel>
@@ -113,6 +114,7 @@ export const ToolbarList: React.FC<IToolBarListProps> = ({ pageSizeList, fieldsL
                     variant="contained"
                     startIcon={<Icon>search</Icon>}
                     onClick={() => onClickSearchButton?.({pageSize, field, searchFor, order})}
+                    title="Submit the search"
                 >
                     Search
                 </Button>
