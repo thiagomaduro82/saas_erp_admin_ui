@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useDrawerContext } from "../shared/contexts";
 import { useEffect } from "react";
-import { Home, PermissionList } from "../pages";
+import { Home, PermissionDetail, PermissionList } from "../pages";
 
 export const AppRoutes = () => {
     
@@ -18,6 +18,12 @@ export const AppRoutes = () => {
                         icon: 'home',
                         label: 'Home',
                     },
+                ]
+            },
+            {
+                icon: 'laptop',
+                label: 'System',
+                data: [
                     {
                         to: '/permission',
                         icon: 'rule',
@@ -32,6 +38,7 @@ export const AppRoutes = () => {
         <Routes>
             <Route path="/home" element={<Home />} />
             <Route path="/permission" element={<PermissionList />} />
+            <Route path="/permission/detail/:uuid" element={<PermissionDetail />} />
             <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
     );

@@ -84,7 +84,7 @@ export const SideBar: React.FC<ISideBar> = ({ children }) => {
                 <Box sx={{ overflow: 'auto', p: 1 }} height={'100%'} display={'flex'} flexDirection={'column'}>
                     {
                         drawerOptions.map(drawerOption => (
-                            <ListItemLink icon={drawerOption.icon} label={drawerOption.label} data={drawerOption.data} key={1}/>
+                            <ListItemLink icon={drawerOption.icon} label={drawerOption.label} data={drawerOption.data} key={Math.random()}/>
                         ))
                     }
                 </Box>

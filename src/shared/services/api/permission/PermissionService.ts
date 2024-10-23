@@ -1,3 +1,4 @@
+import { UUID } from "crypto";
 import { Api } from "../axios-config"
 
 export interface IPermissionList {
@@ -35,9 +36,9 @@ const getAll = async (page: number, size: number, field?: string, arg?: string, 
                 totalPages: data["totalPages"]
             };
         }
-        return new Error('');
+        return new Error('Error trying get all records');
     } catch (error) {
-        return new Error('');
+        return new Error((error as {message: string}).message || 'Error trying get all records');
     }
 }
 
@@ -47,41 +48,39 @@ const getByUuid = async (uuid: string): Promise<IPermissionDetail | Error> => {
         if (data) {
             return data;
         }
-        return new Error('');
+        return new Error('Error trying get record by UUID');
     } catch (error) {
-        return new Error('');
+        return new Error((error as {message: string}).message || 'Error trying get record by UUID');
     }
 }
 
-const create = async (permission: IPermissionList): Promise<IPermissionDetail | Error> => {
+const create = async (permission: Omit<IPermissionDetail, UUID>): Promise<IPermissionDetail | Error> => {
     try {
-        const { data } = await Api.post('/v1/permission', permission);
+        const { data } = await Api.post<IPermissionDetail>('/v1/permission', permission);
         if (data) {
             return data;
         }
-        return new Error('');
+        return new Error('Error creating record');
     } catch (error) {
-        return new Error('');
+        return new Error((error as {message: string}).message || 'Error creating record');
     }
 }
 
-const updateByUuid = async (uuid: string, permission: IPermissionList): Promise<IPermissionDetail | Error> => {
+const updateByUuid = async (uuid: string, permission: IPermissionDetail): Promise<void | Error> => {
     try {
-        const { data } = await Api.put(`/v1/permission/${uuid}`, permission);
-        if (data) {
-            return data;
-        }
-        return new Error('');
+        await Api.put(`/v1/permission/${uuid}`, permission);
+        return new Error('Error updating record');
     } catch (error) {
-        return new Error('');
+        return new Error((error as {message: string}).message || 'Error updating record');
     }
 }
 
 const deleteByUuid = async (uuid: string): Promise<void | Error> => {
     try {
-        const { data } = await Api.delete(`/v1/permission/${uuid}`);
+        await Api.delete(`/v1/permission/${uuid}`);
     } catch (error) {
-        return new Error('');
+        console.log(error);
+        return new Error((error as {message: string}).message || 'Error deleting the record');
     }
 }
 

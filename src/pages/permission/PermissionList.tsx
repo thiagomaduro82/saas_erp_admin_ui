@@ -9,11 +9,13 @@ import { grey } from "@mui/material/colors";
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArticleIcon from '@mui/icons-material/Article';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import { useNavigate } from "react-router-dom";
 
 
 export const PermissionList: React.FC = () => {
 
     const { debounce } = useDebounce(0, false);
+    const navigate = useNavigate();
     const [rows, setRows] = useState<IPermissionDetail[]>([]);
     const [searchParams, setSearchParams] = useState<ISearchParams>();
     const [totalCount, setTotalCount] = useState(0);
@@ -48,6 +50,24 @@ export const PermissionList: React.FC = () => {
 
     }, [debounce, searchParams, page]);
 
+    const handleDelete = (uuid: string) => {
+        if (window.confirm('Delete this record?')) {
+            PermissionService.deleteByUuid(uuid)
+                .then(result => {
+                    if (result instanceof Error) {
+                        alert(result.message);
+                    } else {
+                        setRows(oldRows => {
+                            return [
+                                ...oldRows.filter(oldRow => oldRow.uuid !== uuid),
+                            ]
+                        });
+                        alert('Record deleted successful');
+                    }
+                });
+        }
+    }
+
     return (
         <BaseLayout title="Permissions list" toolsBar={(
             <ToolbarList pageSizeList={Environment.PAGE_SIZES} fieldsList={['UUID', 'Name', 'Description']} orderList={['Asc', 'Desc']}
@@ -61,6 +81,7 @@ export const PermissionList: React.FC = () => {
                     size="small"
                     sx={{ marginBottom: 2 }}
                     title="Add a new record"
+                    onClick={() => navigate('/permission/detail/create')}
                 >
                     New
                 </Button>
@@ -80,16 +101,17 @@ export const PermissionList: React.FC = () => {
                                     <TableCell>{row.uuid}</TableCell>
                                     <TableCell>{row.name}</TableCell>
                                     <TableCell>{row.description}</TableCell>
-                                    <TableCell sx={{textAlign: "center"}}>
-                                        <IconButton size="small" color="secondary" sx={{marginRight: 1}} title="Show record">
+                                    <TableCell sx={{ textAlign: "center" }}>
+                                        <IconButton size="small" color="secondary" sx={{ marginRight: 1 }} title="Show record">
                                             <ArticleIcon fontSize="inherit" />
                                         </IconButton>
 
-                                        <IconButton size="small" color="warning" sx={{marginRight: 1}} title="Edit record">
+                                        <IconButton size="small" color="warning" sx={{ marginRight: 1 }} title="Edit record" 
+                                        onClick={() => navigate(`/permission/detail/${row.uuid}`)}>
                                             <EditNoteIcon fontSize="inherit" />
                                         </IconButton>
 
-                                        <IconButton size="small" color="error" title="Delete record">
+                                        <IconButton size="small" color="error" title="Delete record" onClick={() => handleDelete(row.uuid)}>
                                             <DeleteIcon fontSize="inherit" />
                                         </IconButton>
                                     </TableCell>
