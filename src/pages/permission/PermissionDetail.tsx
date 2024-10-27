@@ -6,6 +6,7 @@ import { PermissionService } from "../../shared/services/api/permission/Permissi
 import { Form } from "@unform/web";
 import { VTextField } from "../../shared/forms";
 import { FormHandles } from "@unform/core";
+import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
 
 interface IFormData {
     uuid: string;
@@ -88,10 +89,34 @@ export const PermissionDetail: React.FC = () => {
                 />
             }>
             <Form ref={formRef} onSubmit={handleSave} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                <VTextField name="uuid" placeholder="UUID" />
-                <VTextField name="name" placeholder="Name"/>
-                <VTextField name="description" placeholder="Description"/>
-            </Form>
-        </BaseLayout>
+                <Box margin={1} component={Paper} display={"flex"} flexDirection={"column"}>
+                    <Grid container padding={2} spacing={2} >
+                        {isLoading && (
+                            <Grid item>
+                                <LinearProgress />
+                            </Grid>
+                        )}
+                        <Grid item>
+                            <Typography variant="h6">Geral</Typography>
+                        </Grid>
+                        <Grid container item direction={"row"} spacing={2} >
+                            <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
+                                <VTextField label="UUID" name="uuid" placeholder="UUID" fullWidth />
+                            </Grid>
+                        </Grid>
+                        <Grid container item direction={"row"} spacing={2}>
+                            <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
+                                <VTextField label="Name" name="name" placeholder="Name" fullWidth />
+                            </Grid>
+                        </Grid>
+                        <Grid container item direction={"row"} spacing={2}>
+                            <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
+                                <VTextField label="Description" name="description" placeholder="Description" fullWidth />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Box >
+            </Form >
+        </BaseLayout >
     )
 }

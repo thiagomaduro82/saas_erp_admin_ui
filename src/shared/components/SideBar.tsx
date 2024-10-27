@@ -58,6 +58,9 @@ const ListItemLink: React.FC<IListNavButtons> = ({ icon, label, data }) => {
 
 export const SideBar: React.FC<ISideBar> = ({ children }) => {
 
+    let drawerKey: number;
+    drawerKey = 0;
+
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -83,8 +86,9 @@ export const SideBar: React.FC<ISideBar> = ({ children }) => {
                 <Toolbar />
                 <Box sx={{ overflow: 'auto', p: 1 }} height={'100%'} display={'flex'} flexDirection={'column'}>
                     {
+                        
                         drawerOptions.map(drawerOption => (
-                            <ListItemLink icon={drawerOption.icon} label={drawerOption.label} data={drawerOption.data} key={Math.random()}/>
+                            <ListItemLink icon={drawerOption.icon} label={drawerOption.label} data={drawerOption.data} key={drawerKey++}/>
                         ))
                     }
                 </Box>
