@@ -69,7 +69,6 @@ const create = async (permission: Omit<IPermissionDetail, UUID>): Promise<IPermi
 const updateByUuid = async (uuid: string, permission: IPermissionDetail): Promise<void | Error> => {
     try {
         await Api.put(`/v1/permission/${uuid}`, permission);
-        return new Error('Error updating record');
     } catch (error) {
         return new Error((error as {message: string}).message || 'Error updating record');
     }

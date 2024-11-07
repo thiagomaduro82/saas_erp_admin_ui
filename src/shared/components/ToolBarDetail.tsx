@@ -39,7 +39,7 @@ export const ToolbarDetail: React.FC<IToolBarDetailProps> = ({
             display={'flex'}
             alignItems={'center'}
             gap={1}
-            elevation={5}
+            elevation={8}
         >
             {(showSaveButtom && !showSaveButtomLoading) && (<Button
                 color="secondary"

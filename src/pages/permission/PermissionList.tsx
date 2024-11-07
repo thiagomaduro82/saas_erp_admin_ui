@@ -7,7 +7,6 @@ import { useDebounce } from "../../shared/hooks";
 import { Environment } from "../../shared/environment";
 import { grey } from "@mui/material/colors";
 import DeleteIcon from '@mui/icons-material/Delete';
-import ArticleIcon from '@mui/icons-material/Article';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import { useNavigate } from "react-router-dom";
 
@@ -102,11 +101,7 @@ export const PermissionList: React.FC = () => {
                                     <TableCell>{row.name}</TableCell>
                                     <TableCell>{row.description}</TableCell>
                                     <TableCell sx={{ textAlign: "center" }}>
-                                        <IconButton size="small" color="secondary" sx={{ marginRight: 1 }} title="Show record">
-                                            <ArticleIcon fontSize="inherit" />
-                                        </IconButton>
-
-                                        <IconButton size="small" color="warning" sx={{ marginRight: 1 }} title="Edit record" 
+                                        <IconButton size="small" color="info" sx={{ marginRight: 1 }} title="Edit record" 
                                         onClick={() => navigate(`/permission/detail/${row.uuid}`)}>
                                             <EditNoteIcon fontSize="inherit" />
                                         </IconButton>
