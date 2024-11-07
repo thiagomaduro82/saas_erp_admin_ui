@@ -6,12 +6,19 @@ import { PermissionService } from "../../shared/services/api/permission/Permissi
 import { Form } from "@unform/web";
 import { VTextField, useVForm } from "../../shared/forms";
 import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
+import * as yup from "yup";
 
 interface IFormData {
     uuid: string;
     name: string;
     description: string;
 }
+
+const formValidationSchema: yup.Schema = yup.object().shape({ 
+    uuid: yup.string().notRequired(), 
+    name: yup.string().required().min(5),
+    description: yup.string().required().min(5)
+});
 
 export const PermissionDetail: React.FC = () => {
 
@@ -44,32 +51,42 @@ export const PermissionDetail: React.FC = () => {
     }, [uuid, navigate, formRef]);
 
     const handleSave = (data: IFormData) => {
-        setIsLoading(true);
-        if (uuid === 'create') {
-            PermissionService.create(data).then((result) => {
-                setIsLoading(false);
-                if (result instanceof Error) {
-                    alert(result.message);
-                } else {
-                    if (isSaveAndClose()) {
-                        navigate('/permission');
+        formValidationSchema.validate(data, {abortEarly: false})
+        .then((validatedData) => {
+            setIsLoading(true);
+            if (uuid === 'create') {
+                PermissionService.create(validatedData).then((result) => {
+                    setIsLoading(false);
+                    if (result instanceof Error) {
+                        alert(result.message);
                     } else {
-                        navigate(`/permission/detail/${result.uuid}`);
+                        if (isSaveAndClose()) {
+                            navigate('/permission');
+                        } else {
+                            navigate(`/permission/detail/${result.uuid}`);
+                        }
                     }
-                }
-            });
-        } else {
-            PermissionService.updateByUuid(uuid, data).then((result) => {
-                setIsLoading(false);
-                if (result instanceof Error) {
-                    alert(result.message);
-                } else {
-                    if (isSaveAndClose()) {
-                        navigate('/permission');
+                });
+            } else {
+                PermissionService.updateByUuid(uuid, validatedData).then((result) => {
+                    setIsLoading(false);
+                    if (result instanceof Error) {
+                        alert(result.message);
+                    } else {
+                        if (isSaveAndClose()) {
+                            navigate('/permission');
+                        }
                     }
-                }
-            });
-        }
+                });
+            }
+        }).catch((errors: yup.ValidationError) => {
+            const validationErrors: {[key: string]: string} = {};
+            errors.inner.forEach(error => {
+                if (!error.path) return;
+                validationErrors[error.path] = error.message;
+                formRef.current?.setErrors(validationErrors);
+            })
+        });
     }
 
     const handleDelete = (uuid: string) => {
